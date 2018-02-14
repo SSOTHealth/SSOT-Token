@@ -1,23 +1,23 @@
 /*
-This file is part of the SSOT.
+This file is part of the SEHR.
 
-The SSOT is free software: you can redistribute it and/or modify
+The  is free software: you can redistribute it and/or modify
 it under the terms of the GNU lesser General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-The SSOT is distributed in the hope that it will be useful,
+The SEHR is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU lesser General Public License for more details.
 
 You should have received a copy of the GNU lesser General Public License
-along with the SSOT.  If not, see <http://www.gnu.org/licenses/>.
+along with the SEHR.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 
 /*
-Standard smart contract for a Decentralized Autonomous Organization (SSOT)
+Standard smart contract for a Decentralized Autonomous Organization (SEHR)
 to automate organizational governance and decision-making.
 */
 
@@ -25,7 +25,7 @@ import "./TokenCreation.sol";
 
 pragma solidity ^0.4.4;
 
-contract SSOTInterface {
+contract SEHRInterface {
     // The minimum debate period that a generic proposal can have
     uint constant minProposalDebatePeriod = 2 weeks;
     // The minimum debate period that a split proposal can have
@@ -36,13 +36,13 @@ contract SSOTInterface {
     // Time for vote freeze. A proposal needs to have majority support before votingDeadline - preSupportTime
     uint constant preSupportTime = 2 days;
     // Denotes the maximum proposal deposit that can be given. It is given as
-    // a fraction of total Ether spent plus balance of the SSOT
+    // a fraction of total Ether spent plus balance of the SEHR
     uint constant maxDepositDivisor = 100;
 
     //Token contract
     Token token;
 
-    // Proposals to spend the SSOT's ether
+    // Proposals to spend the SEHR's ether
     Proposal[] public proposals;
     // The quorum needed for each proposal is partially calculated by
     // totalSupply / minQuorumDivisor
@@ -52,10 +52,10 @@ contract SSOTInterface {
 
     // Address of the curator
     address public curator;
-    // The whitelist: List of addresses the SSOT is allowed to send ether to
+    // The whitelist: List of addresses the SEHR is allowed to send ether to
     mapping (address => bool) public allowedRecipients;
 
-    // Map of addresses blocked during a vote (not allowed to transfer SSOT
+    // Map of addresses blocked during a vote (not allowed to transfer SEHR
     // tokens). The address points to the proposal ID.
     mapping (address => uint) public blocked;
 
@@ -70,8 +70,8 @@ contract SSOTInterface {
     uint sumOfProposalDeposits;
 
     // A proposal with `newCurator == false` represents a transaction
-    // to be issued by this SSOT
-    // A proposal with `newCurator == true` represents a SSOT split
+    // to be issued by this SEHR
+    // A proposal with `newCurator == true` represents a SEHR split
     struct Proposal {
         // The address where the `amount` will go to if the proposal is accepted
         address recipient;
@@ -109,23 +109,23 @@ contract SSOTInterface {
     }
 
     /// @dev Constructor setting the Curator and the address
-    /// for the contract able to create another SSOT as well as the parameters
-    /// for the SSOT Token Creation
+    /// for the contract able to create another SEHR as well as the parameters
+    /// for the SEHR Token Creation
     /// @param _curator The Curator
-    /// @param _daoCreator The contract able to (re)create this SSOT
+    /// @param _daoCreator The contract able to (re)create this SEHR
     /// @param _proposalDeposit The deposit to be paid for a regular proposal
     /// @param _minTokensToCreate Minimum required wei-equivalent tokens
-    ///        to be created for a successful SSOT Token Creation
-    /// @param _closingTime Date (in Unix time) of the end of the SSOT Token Creation
-    /// @param _parentDAO If zero the SSOT Token Creation is open to public, a
+    ///        to be created for a successful SEHR Token Creation
+    /// @param _closingTime Date (in Unix time) of the end of the SEHR Token Creation
+    /// @param _parentDAO If zero the SEHR Token Creation is open to public, a
     /// non-zero address represents the parentDAO that can buy tokens in the
     /// creation phase.
-    /// @param _tokenName The name that the SSOT's token will have
-    /// @param _tokenSymbol The ticker symbol that this SSOT token should have
+    /// @param _tokenName The name that the SEHR's token will have
+    /// @param _tokenSymbol The ticker symbol that this SEHR token should have
     /// @param _decimalPlaces The number of decimal places that the token is
     ///        counted from.
     // This is the constructor: it can not be overloaded so it is commented out
-    //  function SSOT(
+    //  function SEHR(
         //  address _curator,
         //  DAO_Creator _daoCreator,
         //  uint _proposalDeposit,
@@ -143,7 +143,7 @@ contract SSOTInterface {
     /// @notice `msg.sender` creates a proposal to send `_amount` Wei to
     /// `_recipient` with the transaction data `_transactionData`. If
     /// `_newCurator` is true, then this is a proposal that splits the
-    /// SSOT and sets `_recipient` as the new SSOT's Curator.
+    /// SEHR and sets `_recipient` as the new SEHR's Curator.
     /// @param _recipient Address of the recipient of the proposed transaction
     /// @param _amount Amount of wei to be sent with the proposed transaction
     /// @param _description String describing the proposal
@@ -194,15 +194,15 @@ contract SSOTInterface {
     ) returns (bool _success);
 
 
-    /// @dev can only be called by the SSOT itself through a proposal
-    /// updates the contract of the SSOT by sending all ether and rewardTokens
-    /// to the new SSOT. The new SSOT needs to be approved by the Curator
+    /// @dev can only be called by the SEHR itself through a proposal
+    /// updates the contract of the SEHR by sending all ether and rewardTokens
+    /// to the new SEHR. The new SEHR needs to be approved by the Curator
     /// @param _newContract the address of the new contract
     function newContract(address _newContract);
 
 
     /// @notice Add a new possible recipient `_recipient` to the whitelist so
-    /// that the SSOT can send transactions to them (using proposals)
+    /// that the SEHR can send transactions to them (using proposals)
     /// @param _recipient New recipient address
     /// @dev Can only be called by the current Curator
     /// @return Whether successful or not
@@ -211,8 +211,8 @@ contract SSOTInterface {
 
     /// @notice Change the minimum deposit required to submit a proposal
     /// @param _proposalDeposit The new proposal deposit
-    /// @dev Can only be called by this SSOT (through proposals with the
-    /// recipient being this SSOT itself)
+    /// @dev Can only be called by this SEHR (through proposals with the
+    /// recipient being this SEHR itself)
     function changeProposalDeposit(uint _proposalDeposit) external;
 
     /// @notice Doubles the 'minQuorumDivisor' in the case quorum has not been
@@ -243,8 +243,8 @@ contract SSOTInterface {
     event AllowedRecipientChanged(address indexed _recipient, bool _allowed);
 }
 
-// The SSOT contract itself
-contract SSOT is DAOInterface{
+// The SEHR contract itself
+contract SEHR is DAOInterface{
 
     // Modifier that allows only shareholders to vote and create new proposals
     modifier onlyTokenholders {
@@ -252,7 +252,7 @@ contract SSOT is DAOInterface{
             _;
     }
 
-    function SSOT(
+    function SEHR(
         address _curator,
         uint _proposalDeposit,
         Token _token
@@ -453,12 +453,13 @@ contract SSOT is DAOInterface{
             // we are setting this here before the CALL() value transfer to
             // assure that in the case of a malicious recipient contract trying
             // to call executeProposal() recursively money can't be transferred
-            // multiple times out of the SSOT
+            // multiple times out of the SEHR
             p.proposalPassed = true;
 
             // this call is as generic as any transaction. It sends all gas and
             // can do everything a transaction can do. It can be used to reenter
-            // the SSOT. The `p.proposalPassed` variable prevents the call from 
+            // the 
+            . The `p.proposalPassed` variable prevents the call from 
             // reaching this line again
             if (!p.recipient.call.value(p.amount)(_transactionData))
                 throw;
@@ -493,7 +494,7 @@ this withdraw functions is flawed and needs to be replaced by an improved versio
         balances[msg.sender] = 0;
         msg.sender.send(fundsToBeMoved);
 
-        // Burn SSOT Tokens
+        // Burn SEHR Tokens
         totalSupply -= senderBalance;
         // event for light client notification
         Transfer(msg.sender, 0, senderBalance);
